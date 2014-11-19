@@ -33,7 +33,7 @@ build_unix()
 
     # "shared" means build shared and static, instead of just static.
     ./Configure no-idea no-mdc2 no-rc5 no-gost enable-tlsext $* \
-      --with-zlib-include="$stage/packages$prefix/include/zlib" --with-zlib-lib="$stage/packages$prefix/lib/$reltype" \
+      --with-zlib-include="$stage/packages$prefix/include/zlib" --with-zlib-lib="$stage/packages$prefix/lib/release" \
       --prefix="$prefix" --libdir="lib/$reltype" $target
 
     make Makefile
