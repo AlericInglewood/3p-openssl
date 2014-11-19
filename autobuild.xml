@@ -84,6 +84,8 @@
             <string>libraries/i686-linux/include/openssl/*.h</string>
             <string>libraries/i686-linux/lib/release/*.so*</string>
             <string>libraries/i686-linux/lib/release/pkgconfig/*.pc</string>
+            <string>libraries/i686-linux/lib/debug/*.so*</string>
+            <string>libraries/i686-linux/lib/debug/pkgconfig/*.pc</string>
           </array>
           <key>name</key>
           <string>linux</string>
@@ -108,6 +110,8 @@
             <string>libraries/x86_64-linux/include/openssl/*.h</string>
             <string>libraries/x86_64-linux/lib/release/*.so*</string>
             <string>libraries/x86_64-linux/lib/release/pkgconfig/*.pc</string>
+            <string>libraries/x86_64-linux/lib/debug/*.so*</string>
+            <string>libraries/x86_64-linux/lib/debug/pkgconfig/*.pc</string>
           </array>
           <key>name</key>
           <string>linux64</string>
@@ -143,9 +147,9 @@
         </map>
       </map>
       <key>source_directory</key>
-      <string>openssl-1.0.1c</string>
+      <string>openssl-git</string>
       <key>version</key>
-      <string>1.0.1c</string>
+      <string>1.0.1j</string>
     </map>
     <key>type</key>
     <string>autobuild</string>
