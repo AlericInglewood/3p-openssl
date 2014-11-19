@@ -51,9 +51,6 @@ This changed the 'content' of openssl-git, which requires the
 the 'git reset --hard' above when you want to update the library
 source code.
 
-$ cd ..
-$ git commit -am 'Updated openssl-git dependencies'
-
 After fixing the dependencies, you can continue with building.
 
 
