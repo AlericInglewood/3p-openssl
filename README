@@ -59,6 +59,7 @@ BUILDING
 
 # To build the package:
 cd 3p-openssl
+autobuild install	# Install zlib
 autobuild build
 autobuild package
 

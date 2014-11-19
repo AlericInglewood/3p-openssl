@@ -32,7 +32,9 @@ build_unix()
     shift; shift; shift
 
     # "shared" means build shared and static, instead of just static.
-    ./Configure no-idea no-mdc2 no-rc5 no-gost enable-tlsext $* --prefix="$prefix" --libdir="lib/$reltype" $target
+    ./Configure no-idea no-mdc2 no-rc5 no-gost enable-tlsext $* \
+      --with-zlib-include="$stage/packages$prefix/include/zlib" --with-zlib-lib="$stage/packages$prefix/lib/$reltype" \
+      --prefix="$prefix" --libdir="lib/$reltype" $target
 
     make Makefile
     # Parallel building is broken for this package. Only use one core.
