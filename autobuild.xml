@@ -137,8 +137,11 @@
           </map>
           <key>manifest</key>
           <array>
-            <string>lib/libcrypto.a</string>
-            <string>lib/libssl.a</string>
+            <string>libraries/universal-darwin/include/openssl/*.h</string>
+            <string>libraries/universal-darwin/lib/release/*.a</string>
+            <string>libraries/universal-darwin/lib/release/pkgconfig/*.pc</string>
+            <string>libraries/universal-darwin/lib/debug/*.a</string>
+            <string>libraries/universal-darwin/lib/debug/pkgconfig/*.pc</string>
           </array>
           <key>name</key>
           <string>darwin</string>

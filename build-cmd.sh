@@ -90,8 +90,8 @@ cd "$OPENSSL_SOURCE_DIR"
             perl ../copy-windows-links.pl "include/openssl" "$stage/include/openssl"
         ;;
         "darwin")
-            build_unix /libraries/i686-linux darwin-i386-cc release no-shared
-            build_unix /libraries/i686-linux debug-darwin-i386-cc debug no-shared
+            build_unix /libraries/universal-darwin darwin-i386-cc release no-shared
+            build_unix /libraries/universal-darwin debug-darwin-i386-cc debug no-shared
         ;;
         "linux")
             build_unix /libraries/i686-linux linux-generic32 release -fno-stack-protector threads no-shared
