@@ -161,9 +161,9 @@
           <key>manifest</key>
           <array>
             <string>libraries/i686-linux/include/openssl/*.h</string>
-            <string>libraries/i686-linux/lib/release/*.so*</string>
+            <string>libraries/i686-linux/lib/release/*.a</string>
             <string>libraries/i686-linux/lib/release/pkgconfig/*.pc</string>
-            <string>libraries/i686-linux/lib/debug/*.so*</string>
+            <string>libraries/i686-linux/lib/debug/*.a</string>
             <string>libraries/i686-linux/lib/debug/pkgconfig/*.pc</string>
           </array>
           <key>name</key>

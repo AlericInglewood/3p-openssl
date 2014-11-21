@@ -37,6 +37,8 @@ build_unix()
       --prefix="$prefix" --libdir="lib/$reltype" $target
 
     make Makefile
+    # Clean up stuff from a previous compile.
+    make clean
     # Parallel building is broken for this package. Only use one core.
     make build_libs
     make build_apps
@@ -48,10 +50,12 @@ build_unix()
     # Fix the three pkgconfig files.
     find "$stage$prefix/lib/$reltype/pkgconfig" -type f -name '*.pc' -exec sed -i -e 's%'$prefix'%${PREBUILD_DIR}%g' {} \;
 
-    # By default, 'make install' leaves even the user write bit off.
-    # This causes trouble for us down the road, along about the time
-    # the consuming build tries to strip libraries.
-    chmod u+w "$stage$prefix/lib/$reltype"/libcrypto.so.* "$stage$prefix/lib/$reltype"/libssl.so.*
+    if expr match "$*" '.* shared' >/dev/null; then
+	# By default, 'make install' leaves even the user write bit off.
+	# This causes trouble for us down the road, along about the time
+	# the consuming build tries to strip libraries.
+	chmod u+w "$stage$prefix/lib/$reltype"/libcrypto.so.* "$stage$prefix/lib/$reltype"/libssl.so.*
+    fi
 }
 
 cd "$OPENSSL_SOURCE_DIR"
@@ -90,8 +94,8 @@ cd "$OPENSSL_SOURCE_DIR"
             build_unix /libraries/i686-linux debug-darwin-i386-cc debug no-shared
         ;;
         "linux")
-            build_unix /libraries/i686-linux linux-generic32 release -fno-stack-protector threads shared zlib-dynamic
-            build_unix /libraries/i686-linux debug-linux-generic32 debug -fno-stack-protector threads shared zlib-dynamic
+            build_unix /libraries/i686-linux linux-generic32 release -fno-stack-protector threads no-shared
+            build_unix /libraries/i686-linux debug-linux-generic32 debug -fno-stack-protector threads no-shared
         ;;
         "linux64")
             build_unix /libraries/x86_64-linux linux-x86_64 release -fno-stack-protector threads shared zlib-dynamic
