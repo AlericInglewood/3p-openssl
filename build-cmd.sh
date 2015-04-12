@@ -26,15 +26,14 @@ set -x
 
 build_unix()
 {
-    prefix="$1"
-    target="$2"
-    reltype="$3"
-    shift; shift; shift
+    target="$1"
+    reltype="$2"
+    shift 2
 
     # "shared" means build shared and static, instead of just static.
     ./Configure no-idea no-mdc2 no-rc5 no-gost enable-tlsext $* \
-      --with-zlib-include="$stage/packages$prefix/include/zlib" --with-zlib-lib="$stage/packages$prefix/lib/release" \
-      --prefix="$prefix" --libdir="lib/$reltype" $target
+      --with-zlib-include="$stage/packages/include/zlib" --with-zlib-lib="$stage/packages/lib/release" \
+      --libdir="lib/$reltype" $target
 
     make Makefile
     # Clean up stuff from a previous compile.
@@ -48,63 +47,95 @@ build_unix()
     make INSTALL_PREFIX="$stage" install_sw
 
     # Fix the three pkgconfig files.
-    find "$stage$prefix/lib/$reltype/pkgconfig" -type f -name '*.pc' -exec sed -i -e 's%'$prefix'%${PREBUILD_DIR}%g' {} \;
+    find "$stage/lib/$reltype/pkgconfig" -type f -name '*.pc' -exec sed -i -e '${PREBUILD_DIR}%g' {} \;
 
     if expr match "$*" '.* shared' >/dev/null; then
 	# By default, 'make install' leaves even the user write bit off.
 	# This causes trouble for us down the road, along about the time
 	# the consuming build tries to strip libraries.
-	chmod u+w "$stage$prefix/lib/$reltype"/libcrypto.so.* "$stage$prefix/lib/$reltype"/libssl.so.*
+	chmod u+w "$stage/lib/$reltype"/libcrypto.so.* "$stage/lib/$reltype"/libssl.so.*
     fi
 }
 
-cd "$OPENSSL_SOURCE_DIR"
-    case "$AUTOBUILD_PLATFORM" in
-        "windows")
+build_windows()
+{
+    target="$1"
+	reltype="$2"
+	shift 2
+	
+	if [ "$reltype" = "debug" ] ; then
+	    cfgpfx="debug-" # 'perl Configure VC-WIN[arch] ...' must be changed to 'perl Configure debug-VC-WIN[arch] ...'
+		mkpfx="debug"   # 'perl util/mk1mf.pl dll VC-WIN[arch] ...' must be changed to 'perl util/mk1mf.pl debug dll VC-WIN[arch] ...'
+		outpfx=".dbg"   # 'out32dll' and 'tmp32dll' must be changed to 'out32dll.dbg' and 'tmp32dll.dbg '
+	fi
+	
+	#building openssl creates a mess of stale files. Kill them all before building, as they may interfere. No, nmake clean does not clean them all up.
+	rm -f NUL
+	rm -f MINFO
+	rm -f Makefile
+	rm -f ms/*.{mak,def,obj,asm,rc}
+	rm -rf out32dll$outpfx
+	rm -rf tmp32dll$outpfx
+	
+	if [ "$AUTOBUILD_PLATFORM" = "windows64" ] ; then
+	    config="VC-WIN64A"
+		#not specifying no-asm results in missing symbols, even if you fix the chain of bugs in openssl that prevent the link stage from even being reached.
+		opt="no-asm"
+		#even with no-asm specified, uptable.obj still needs to be generated from assembly.
+		perl ms/uplink-x86_64.pl nasm > ms/uptable.asm
+		nasm -f win64 -o ms/uptable.obj ms/uptable.asm
+	else
+	    config="VC-WIN32"
+	fi
+
+    perl Configure $cfgpfx$config $opt $*
+	perl util/mkfiles.pl > MINFO
+	perl util/mk1mf.pl $mkpfx $opt dll $config > ms/ntdll.mak
+	
+	perl util/mkdef.pl 32 libeay > ms/libeay32.def
+	perl util/mkdef.pl 32 ssleay > ms/ssleay32.def
+	
+	export CL=/MP
+    nmake -f ms/ntdll.mak
+	
+	# Stage archives
+    mkdir -p "$stage/lib/$reltype"
+	cp out32dll$outpfx/{libeay32,ssleay32}.{dll,lib} "$stage/lib/$reltype"
+	
+	nmake -f ms/ntdll.mak clean
+}
+
+pushd "$OPENSSL_SOURCE_DIR"
+    case $AUTOBUILD_PLATFORM in
+        windows|windows64)
             load_vsvars
-
-            # disable idea cypher per Phoenix's patent concerns (DEV-22827)
-            perl Configure VC-WIN32 no-asm no-idea
-
-            # Not using NASM
-            ./ms/do_ms.bat
-
-            nmake -f ms/ntdll.mak
-
-            mkdir -p "$stage/lib/debug"
-            mkdir -p "$stage/lib/release"
-
-            cp "out32dll/libeay32.lib" "$stage/lib/debug"
-            cp "out32dll/ssleay32.lib" "$stage/lib/debug"
-            cp "out32dll/libeay32.lib" "$stage/lib/release"
-            cp "out32dll/ssleay32.lib" "$stage/lib/release"
-
-            cp out32dll/{libeay32,ssleay32}.dll "$stage/lib/debug"
-            cp out32dll/{libeay32,ssleay32}.dll "$stage/lib/release"
-
-            mkdir -p "$stage/include/openssl"
-
-            # These files are symlinks in the SSL dist but just show up as text files
-            # on windows that contain a string to their source.  So run some perl to
-            # copy the right files over.
-            perl ../copy-windows-links.pl "include/openssl" "$stage/include/openssl"
+			
+			build_windows $AUTOBUILD_PLATFORM release
+			build_windows $AUTOBUILD_PLATFORM debug
+			
+			# Stage headers
+            mkdir -p $stage/include/openssl
+            cp -af inc32/openssl/*.h "${stage}"/include/openssl/
         ;;
-        "darwin")
-            build_unix /libraries/universal-darwin darwin-i386-cc release no-shared
-            build_unix /libraries/universal-darwin debug-darwin-i386-cc debug no-shared
+        darwin)
+            build_unix darwin-i386-cc release no-shared
+            build_unix /debug-darwin-i386-cc debug no-shared
         ;;
-        "linux")
-            build_unix /libraries/i686-linux linux-generic32 release -fno-stack-protector threads no-shared
-            build_unix /libraries/i686-linux debug-linux-generic32 debug -fno-stack-protector threads no-shared
+        linux)
+            build_unix linux-generic32 release -fno-stack-protector threads no-shared
+            build_unix debug-linux-generic32 debug -fno-stack-protector threads no-shared
         ;;
-        "linux64")
-            build_unix /libraries/x86_64-linux linux-x86_64 release -fno-stack-protector threads shared zlib-dynamic
-            build_unix /libraries/x86_64-linux debug-linux-x86_64 debug -fno-stack-protector threads shared zlib-dynamic
-        ;;
+        linux64)
+            build_unix linux-x86_64 release -fno-stack-protector threads shared zlib-dynamic
+            build_unix debug-linux-x86_64 debug -fno-stack-protector threads shared zlib-dynamic
+		;;
+
+        *)
+	  fail "Unknown platform $AUTOBUILD_PLATFORM."
+	;;
     esac
     mkdir -p "$stage/LICENSES"
     cp LICENSE "$stage/LICENSES/openssl.txt"
-cd "$top"
-
+popd
 pass
 

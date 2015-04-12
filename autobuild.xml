@@ -34,9 +34,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>c2707c0214bd0d58b35c77fa351f8cb0</string>
+              <string>294a564459d8ce85a4ad436e876e5894</string>
               <key>url</key>
-              <string>https://bitbucket.org/SingularityViewer/libraries/downloads/zlib-1.2.5-linux-20110314.tar.bz2</string>
+              <string>https://bitbucket.org/SingularityViewer/libraries/downloads/zlib-1.2.8-linux-20150411.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -46,9 +46,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>367cb642f1471f85f1094827ac960dbe</string>
+              <string>d451b3459c982ac75d32af3135b0833f</string>
               <key>url</key>
-              <string>https://bitbucket.org/SingularityViewer/libraries/downloads/zlib-1.2.6-linux-x86_64-20120419.tar.bz2</string>
+              <string>https://bitbucket.org/SingularityViewer/libraries/downloads/zlib-1.2.8-linux64-20150411.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -58,9 +58,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>d76dad53f2984827db98fd9d62232ab2</string>
+              <string>8b64ca05cad58d0081221e0bcf7ffe8d</string>
               <key>url</key>
-              <string>https://bitbucket.org/SingularityViewer/libraries/downloads/zlib-1.2.5-windows-20120704.tar.bz2</string>
+              <string>https://bitbucket.org/SingularityViewer/libraries/downloads/zlib-1.2.8-windows-20150408.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -70,9 +70,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>5aa50bd41d6cf0262a94760ef66bdbcf</string>
+              <string>be050e852c1ba7f1b44fe7dc864a6287</string>
               <key>url</key>
-              <string>https://bitbucket.org/SingularityViewer/libraries/downloads/zlib-1.2.8-windows64-20131019.tar.bz2</string>
+              <string>https://bitbucket.org/SingularityViewer/libraries/downloads/zlib-1.2.8-windows64-vs12-20150408.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
@@ -137,11 +137,11 @@
           </map>
           <key>manifest</key>
           <array>
-            <string>libraries/universal-darwin/include/openssl/*.h</string>
-            <string>libraries/universal-darwin/lib/release/*.a</string>
-            <string>libraries/universal-darwin/lib/release/pkgconfig/*.pc</string>
-            <string>libraries/universal-darwin/lib/debug/*.a</string>
-            <string>libraries/universal-darwin/lib/debug/pkgconfig/*.pc</string>
+            <string>include/openssl/*.h</string>
+            <string>lib/release/*.a</string>
+            <string>lib/release/pkgconfig/*.pc</string>
+            <string>lib/debug/*.a</string>
+            <string>lib/debug/pkgconfig/*.pc</string>
           </array>
           <key>name</key>
           <string>darwin</string>
@@ -163,11 +163,11 @@
           </map>
           <key>manifest</key>
           <array>
-            <string>libraries/i686-linux/include/openssl/*.h</string>
-            <string>libraries/i686-linux/lib/release/*.a</string>
-            <string>libraries/i686-linux/lib/release/pkgconfig/*.pc</string>
-            <string>libraries/i686-linux/lib/debug/*.a</string>
-            <string>libraries/i686-linux/lib/debug/pkgconfig/*.pc</string>
+            <string>include/openssl/*.h</string>
+            <string>lib/release/*.a</string>
+            <string>lib/release/pkgconfig/*.pc</string>
+            <string>lib/debug/*.a</string>
+            <string>lib/debug/pkgconfig/*.pc</string>
           </array>
           <key>name</key>
           <string>linux</string>
@@ -189,11 +189,11 @@
           </map>
           <key>manifest</key>
           <array>
-            <string>libraries/x86_64-linux/include/openssl/*.h</string>
-            <string>libraries/x86_64-linux/lib/release/*.so*</string>
-            <string>libraries/x86_64-linux/lib/release/pkgconfig/*.pc</string>
-            <string>libraries/x86_64-linux/lib/debug/*.so*</string>
-            <string>libraries/x86_64-linux/lib/debug/pkgconfig/*.pc</string>
+            <string>include/openssl/*.h</string>
+            <string>lib/release/*.so*</string>
+            <string>lib/release/pkgconfig/*.pc</string>
+            <string>lib/debug/*.so*</string>
+            <string>lib/debug/pkgconfig/*.pc</string>
           </array>
           <key>name</key>
           <string>linux64</string>
@@ -215,6 +215,7 @@
           </map>
           <key>manifest</key>
           <array>
+            <string>include/openssl/*.h</string>
             <string>lib/debug/libeay32.lib</string>
             <string>lib/debug/libeay32.dll</string>
             <string>lib/debug/ssleay32.lib</string>
@@ -227,11 +228,41 @@
           <key>name</key>
           <string>windows</string>
         </map>
+		<key>windows64</key>
+        <map>
+          <key>configurations</key>
+          <map>
+            <key>default</key>
+            <map>
+              <key>build</key>
+              <map>
+              </map>
+              <key>default</key>
+              <string>true</string>
+              <key>name</key>
+              <string>default</string>
+            </map>
+          </map>
+          <key>manifest</key>
+          <array>
+            <string>include/openssl/*.h</string>
+            <string>lib/debug/libeay32.lib</string>
+            <string>lib/debug/libeay32.dll</string>
+            <string>lib/debug/ssleay32.lib</string>
+            <string>lib/debug/ssleay32.dll</string>
+            <string>lib/release/libeay32.lib</string>
+            <string>lib/release/libeay32.dll</string>
+            <string>lib/release/ssleay32.lib</string>
+            <string>lib/release/ssleay32.dll</string>
+          </array>
+          <key>name</key>
+          <string>windows64</string>
+        </map>
       </map>
       <key>source_directory</key>
       <string>openssl-git</string>
       <key>version</key>
-      <string>1.0.1j</string>
+      <string>1.0.1m</string>
     </map>
     <key>type</key>
     <string>autobuild</string>

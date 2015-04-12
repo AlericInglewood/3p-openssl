@@ -1,0 +1,9 @@
+#! /bin/bash
+
+set -e
+export AUTOBUILD_VSVER=100
+export AUTOBUILD_PLATFORM_OVERRIDE=windows
+rm -rf stage
+autobuild.cmd install
+autobuild.cmd build
+autobuild.cmd package
