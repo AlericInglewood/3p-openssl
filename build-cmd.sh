@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 cd "`dirname "$0"`"
 top="`pwd`"
@@ -33,7 +33,7 @@ build_unix()
     # "shared" means build shared and static, instead of just static.
     ./Configure no-idea no-mdc2 no-rc5 no-gost enable-tlsext $* \
       --with-zlib-include="$stage/packages/include/zlib" --with-zlib-lib="$stage/packages/lib/release" \
-      --libdir="lib/$reltype" $target
+      --prefix="$stage" --libdir="lib/$reltype" --openssldir="share" $target
 
     make Makefile
     # Clean up stuff from a previous compile.
@@ -44,10 +44,10 @@ build_unix()
     make openssl.pc
     make libssl.pc
     make libcrypto.pc
-    make INSTALL_PREFIX="$stage" install_sw
+    make install_sw
 
     # Fix the three pkgconfig files.
-    find "$stage/lib/$reltype/pkgconfig" -type f -name '*.pc' -exec sed -i -e '${PREBUILD_DIR}%g' {} \;
+    #find "$stage/lib/$reltype/pkgconfig" -type f -name '*.pc' -exec sed -i -e 's%'$prefix'%${PREBUILD_DIR}%g' {} \;
 
     if expr match "$*" '.* shared' >/dev/null; then
 	# By default, 'make install' leaves even the user write bit off.
