@@ -13,28 +13,6 @@ $ cd 3p-openssl
 $ git submodule init
 $ git submodule update
 
-Fixing dependencies
--------------------
-
-The dependencies in the Makefile of openssl-git are wrong for our
-configuration (it contains a dependency on, for example, openssl/idea.h
-that doesn't work). You therefore need to fix the dependencies first
-as follows:
-
-$ cd openssl-git
-$ ./Configure dist
-$ make dclean
-$ make clean
-$ make depend
-
-This changed the 'content' of openssl-git, which requires the
-the 'git reset --hard' below when you want to update the library
-source code.
-
-Continue at BUILDING below, unless you actually need
-to upgrade the openssl version (you'll need repository
-write access for that though).
-
 Updating openssl-git
 --------------------
 
@@ -43,17 +21,18 @@ treat it as a normal git repository.
 
 $ cd openssl-git
 $ git reset --hard		# Throw away all local changes!
+				# (needed because all Makefiles were changed by running 'make depend')!
 $ git checkout master
 $ git pull
 $ git tag
-$ git checkout OpenSSL_1_0_1j
+$ git checkout OpenSSL_1_0_1m
 
 Register in the superproject that a different checkout is being used:
 Don't forget the update the version in autobuild.xml too!
 
 $ cd ..
 $ vi autobuild.xml
-$ git commit -am 'Updated submodule openssl-git to OpenSSL_1_0_1j'
+$ git commit -am 'Updated submodule openssl-git to OpenSSL_1_0_1m'
 
 
 BUILDING
