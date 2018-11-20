@@ -25,14 +25,14 @@ $ git reset --hard		# Throw away all local changes!
 $ git checkout master
 $ git pull
 $ git tag
-$ git checkout OpenSSL_1_0_1m
+$ git checkout OpenSSL_1_1_1
 
 Register in the superproject that a different checkout is being used:
-Don't forget the update the version in autobuild.xml too!
 
 $ cd ..
-$ vi autobuild.xml
-$ git commit -am 'Updated submodule openssl-git to OpenSSL_1_0_1m'
+$ correct_autobuild_xml
+$ git diff autobuild.xml
+$ git commit -am 'Updated submodule openssl-git to OpenSSL_1_1_1'
 
 
 BUILDING

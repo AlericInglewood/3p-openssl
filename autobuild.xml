@@ -79,11 +79,13 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.2.11</string>
+        <string>1.2.8</string>
       </map>
     </map>
     <key>package_description</key>
     <map>
+      <key>copyright</key>
+      <string>Copyright (c) 1998-2016 The OpenSSL Project.  All rights reserved; Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)</string>
       <key>license</key>
       <string>openssl</string>
       <key>license_file</key>
@@ -263,8 +265,8 @@
       </map>
       <key>source_directory</key>
       <string>openssl-git</string>
-      <key>version</key>
-      <string>1.1.1</string>
+      <key>version_file</key>
+      <string>package_version</string>
     </map>
     <key>type</key>
     <string>autobuild</string>

@@ -31,7 +31,7 @@ build_unix()
     shift 2
 
     # "shared" means build shared and static, instead of just static.
-    ./Configure no-idea no-mdc2 no-rc5 no-gost enable-tlsext $* \
+    ./Configure no-idea no-mdc2 no-rc5 no-gost $* \
       --with-zlib-include="$stage/packages/include/zlib" --with-zlib-lib="$stage/packages/lib/release" \
       --prefix="$stage" --libdir="lib/$reltype" $target
 
@@ -138,6 +138,7 @@ pushd "$OPENSSL_SOURCE_DIR"
     esac
     mkdir -p "$stage/LICENSES"
     cp LICENSE "$stage/LICENSES/openssl.txt"
+    grep '^Version:' openssl.pc | sed -e 's/Version: //' > "$stage/package_version"
 popd
 pass
 
